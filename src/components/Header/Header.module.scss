@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  a {
+    text-decoration: none;
+  }
+
+  h2.logo {
+    font-family: 'Asap', sans-serif;
+    color: #69665c;
+  }
+
+  img.userImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  span {
+    font-family: ubuntu, sans-serif;
+    color: #69665c;
+    font-size: 1.2rem;
+  }
+
+  .logoutBtn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}

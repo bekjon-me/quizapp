@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import './assets/main.scss';
+import AppRouter from './router/AppRouter';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loader from './components/Loader/Loader';
+import jwt_decode from 'jwt-decode';
 
 function App() {
+  useEffect(() => {
+    const token = JSON.parse(
+      localStorage.getItem('tokens') as string
+    ).access_token;
+    if (token) {
+      const decodedToken: any = jwt_decode(token);
+      console.log(decodedToken);
+      console.log(localStorage.getItem('id'));
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <AppRouter />
+      <ToastContainer />
+      <Loader />
     </div>
   );
 }
