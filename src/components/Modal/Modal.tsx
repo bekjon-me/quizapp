@@ -3,7 +3,7 @@ import { Field, Form } from 'react-final-form';
 import styles from './Modal.module.scss';
 import { ToastContainer } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectQuizzes } from '../../app/QuizzesSlice';
+import { addQuiz, selectQuizzes } from '../../app/QuizzesSlice';
 import { withTokenInstance } from '../../axios/axios';
 import { Question } from '../../app/@types.data';
 
@@ -37,10 +37,11 @@ export default function Modal(props: IProps) {
 
     try {
       const res = await withTokenInstance.post('quiz', payload);
-      console.log(res.data);
+      dispatch(addQuiz(res.data));
     } catch (error) {
       console.log(error);
     }
+    props.setModal(false);
   };
 
   const handleToggleModal = () => {
