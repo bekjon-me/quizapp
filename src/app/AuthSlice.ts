@@ -5,7 +5,7 @@ import { RootState } from './store';
 
 // init state
 const initialState = {
-  isUser: true,
+  isUser: false,
   email: '',
   isLoading: false,
   fullName: '',
