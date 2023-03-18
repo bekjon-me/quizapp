@@ -1,0 +1,78 @@
+#answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  width: 100%;
+}
+
+.answer {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid #a8c1d5;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: arial, helvetica, sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #cedce7;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#cedce7),
+    to(#596a72)
+  );
+  background-image: -webkit-linear-gradient(top, #cedce7, #596a72);
+  background-image: -moz-linear-gradient(top, #cedce7, #596a72);
+  background-image: -ms-linear-gradient(top, #cedce7, #596a72);
+  background-image: -o-linear-gradient(top, #cedce7, #596a72);
+  background-image: linear-gradient(to bottom, #cedce7, #596a72);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#CEDCE7, endColorstr=#596a72);
+
+  input {
+    position: absolute;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
+}
+
+.answer.active {
+  border: 1px solid #8aabc5;
+  background-color: #0f0f0f;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#212222),
+    to(#000000)
+  );
+  background-image: -webkit-linear-gradient(top, #212222, #434f55);
+  background-image: -moz-linear-gradient(top, #212222, #434f55);
+  background-image: -ms-linear-gradient(top, #212222, #434f55);
+  background-image: -o-linear-gradient(top, #212222, #434f55);
+  background-image: linear-gradient(to bottom, #212222, #434f55);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#acc4d6, endColorstr=#434f55);
+}
+
+.answer:hover {
+  transform: scale(1.01);
+}

@@ -14,8 +14,6 @@ export const handleRegister = (values: any, dispatch: Dispatch) => {
         password: values.password,
       };
 
-      localStorage.setItem('id', res.data.id);
-
       try {
         const res = await nonTokenInstance.post(LOGIN_USER_URL, loginPayload);
         const parsedResponse = JSON.parse(res.data);
@@ -39,7 +37,9 @@ export const handleRegister = (values: any, dispatch: Dispatch) => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      if (err.message === 'Network Error') {
+        toast.error('It seems you are not connected to the Internet');
+      }
       if (err.response?.data) {
         toast.error(err.response.data);
       }

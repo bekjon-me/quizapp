@@ -28,7 +28,9 @@ export const handleLogin = (values: any, dispatch: Dispatch) => {
       toast.success('You have successfully logged in');
     })
     .catch((err) => {
-      console.log(err);
+      if (err.message === 'Network Error') {
+        toast.error('It seems you are not connected to the Internet');
+      }
       if (err.response?.data) {
         toast.error(err.response.data);
       }

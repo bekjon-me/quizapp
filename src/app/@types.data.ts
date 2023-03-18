@@ -19,3 +19,20 @@ export type Quiz = {
 export type quizzes = {
   quizzes: Quiz[];
 };
+
+export type Question = {
+  Id: number;
+  Text: string;
+  QuizId: number;
+  Options: {
+    Id: number;
+    Text: string;
+    IsCorrect: boolean;
+    QuestionId: number;
+  }[];
+};
+
+export type Answer = {
+  questionId: number;
+  optionId: number;
+};

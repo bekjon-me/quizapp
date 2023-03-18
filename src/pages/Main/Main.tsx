@@ -8,6 +8,7 @@ import { nonTokenInstance, withTokenInstance } from '../../axios/axios';
 import { useAppDispatch } from '../../app/hooks';
 import { setQuizzes } from '../../app/QuizzesSlice';
 import QuizCard from '../../components/QuizCard/QuizCard';
+import { setIsloading } from '../../app/AuthSlice';
 
 export default function Main() {
   const [modal, setModal] = React.useState<boolean>(false);
@@ -19,6 +20,7 @@ export default function Main() {
   };
 
   const getQuizzes = async () => {
+    dispatch(setIsloading(true));
     try {
       const res = await withTokenInstance.get('quiz');
       dispatch(setQuizzes(res.data));
@@ -26,6 +28,7 @@ export default function Main() {
     } catch (error) {
       console.log(error);
     }
+    dispatch(setIsloading(false));
   };
 
   useEffect(() => {

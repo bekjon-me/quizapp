@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Main, Profile } from '../pages';
-import { MAIN, PROFILE } from './utils';
+import { Main, Profile, Quiz } from '../pages';
+import { MAIN, PROFILE, QUIZ } from './utils';
 
 export const privateRouter = createBrowserRouter([
   {
@@ -10,6 +10,10 @@ export const privateRouter = createBrowserRouter([
   {
     path: PROFILE,
     element: <Profile />,
+  },
+  {
+    path: QUIZ,
+    element: <Quiz />,
   },
   {
     path: '*',

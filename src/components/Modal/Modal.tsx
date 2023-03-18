@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectQuizzes } from '../../app/QuizzesSlice';
 import { withTokenInstance } from '../../axios/axios';
+import { Question } from '../../app/@types.data';
 
 interface IProps {
   setModal: Dispatch<SetStateAction<boolean>>;
@@ -13,43 +14,25 @@ interface IProps {
 export default function Modal(props: IProps) {
   const { quizzes } = useAppSelector(selectQuizzes);
   const dispatch = useAppDispatch();
-
-  const question = {
-    Id: 1,
-    QuizId: 6,
-    Text: 'What is the capital of France?',
-    Options: [
-      {
-        Id: 1,
-        questionId: 6,
-        IsCorrect: true,
-        Text: 'Paris',
-      },
-      {
-        Id: 2,
-        questionId: 6,
-        IsCorrect: false,
-        Text: 'London',
-      },
-      {
-        Id: 3,
-        questionId: 6,
-        IsCorrect: false,
-        Text: 'Berlin',
-      },
-      {
-        Id: 4,
-        questionId: 6,
-        IsCorrect: false,
-        Text: 'Rome',
-      },
-    ],
-  };
+  const [questions, setQuestions] = React.useState<Question[] | []>([
+    {
+      Id: 0,
+      Text: '',
+      QuizId: 0,
+      Options: [
+        {
+          Id: 0,
+          Text: '',
+          QuestionId: 0,
+          IsCorrect: false,
+        },
+      ],
+    },
+  ]);
 
   const onSubmit = async (values: any) => {
     const payload = {
       ...values,
-      Questoins: [question],
     };
 
     try {
