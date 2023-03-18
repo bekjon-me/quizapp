@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const token = JSON.parse(
       localStorage.getItem('tokens') as string
-    ).access_token;
+    )?.access_token;
     if (token) {
       const decodedToken: any = jwt_decode(token);
       console.log(decodedToken);
