@@ -3,6 +3,7 @@ import { nonTokenInstance } from '../axios/axios';
 import { createUser, setIsloading } from '../app/AuthSlice';
 import { Dispatch } from '@reduxjs/toolkit';
 import { LOGIN_USER_URL } from '../utils/urls';
+import jwt_decode from 'jwt-decode';
 
 export const handleLogin = (values: any, dispatch: Dispatch) => {
   dispatch(setIsloading(true));
@@ -21,9 +22,8 @@ export const handleLogin = (values: any, dispatch: Dispatch) => {
         fullName: parsedResponse.FullName,
       };
 
-      console.log(tokens);
-
       localStorage.setItem('tokens', JSON.stringify(tokens));
+      localStorage.setItem('id', parsedResponse.UserId);
       dispatch(createUser(user));
       toast.success('You have successfully logged in');
     })

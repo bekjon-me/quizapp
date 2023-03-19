@@ -9,7 +9,6 @@ export default function QuizCard({ quiz }: { quiz: Quiz }) {
   const handleQuiz = () => {
     navigate(`quiz/${quiz.id}`);
   };
-  console.log(quiz);
 
   return (
     <div

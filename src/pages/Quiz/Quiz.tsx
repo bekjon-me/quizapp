@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Quiz.scss';
 import { Field, Form } from 'react-final-form';
 import { useParams } from 'react-router-dom';
@@ -6,7 +6,8 @@ import { setIsloading } from '../../app/AuthSlice';
 import { useAppDispatch } from '../../app/hooks';
 import { withTokenInstance } from '../../axios/axios';
 import { Answer, Question } from '../../app/@types.data';
-import jwtDecode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
+import Result from '../../components/Result/Result';
 
 export default function Quiz() {
   const [questions, setQuestions] = React.useState<Question[] | []>([]);
@@ -14,7 +15,10 @@ export default function Quiz() {
   const [selectedOption, setSelectedOption] = React.useState<string | null>(
     '1'
   );
+  const [title, setTitle] = useState<string>('');
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [result, setResult] = useState<null>(null);
+
   const { id } = useParams();
   const dispatch = useAppDispatch();
 
@@ -22,7 +26,7 @@ export default function Quiz() {
     dispatch(setIsloading(true));
     try {
       const res = await withTokenInstance.get('quiz/' + id);
-      console.log(res.data.Questions);
+      setTitle(res.data.Title);
       setQuestions(res.data.Questions);
     } catch (error) {
       console.log(error);
@@ -72,52 +76,28 @@ export default function Quiz() {
   };
 
   const handleSubmit = async (values: { radio: string }) => {
+    dispatch(setIsloading(true));
     const answersPayload = [
       ...answers,
       {
         questionId: questions[currentQuestion]?.Id,
-        optionId: parseInt(values.radio),
+        optionId: parseInt(selectedOption as string),
       },
     ];
-    const payload = [
-      {
-        questionId: 1,
-        optionId: parseInt(values.radio),
-      },
-      {
-        questionId: 2,
-        optionId: parseInt(values.radio),
-      },
-      {
-        questionId: 3,
-        optionId: parseInt(values.radio),
-      },
-      {
-        questionId: 4,
-        optionId: parseInt(values.radio),
-      },
-      {
-        questionId: 5,
-        optionId: parseInt(values.radio),
-      },
-    ];
-    const token = localStorage.getItem('tokens');
-    const decodedToken: any = jwtDecode(token as string);
-    const userId = decodedToken.jti;
+
+    const userId = localStorage.getItem('id');
     const quizId = id;
-    console.log(answersPayload);
     try {
       const res = await withTokenInstance.post(
         `Results?UserId=${userId}&QuizId=${quizId}`,
         answersPayload
       );
-      console.log(res);
+      setResult(res.data.score);
     } catch (error) {
       console.log(error);
     }
+    dispatch(setIsloading(false));
   };
-
-  console.log(answers);
 
   return (
     <Form
@@ -127,88 +107,102 @@ export default function Quiz() {
       }}
     >
       {({ handleSubmit, form }) => (
-        <div style={{ display: 'flex' }}>
-          <form
-            className='mt-5'
-            onSubmit={handleSubmit}
-            style={{ flexGrow: 1 }}
-          >
-            <div className='row'>
-              <div className='col-12 col-md-offset-2'>
-                <div className='jumbotron text-center' id='question-container'>
-                  <h2 id='question'>{questions[currentQuestion]?.Text}</h2>
-                </div>
-                <div className='row'>
-                  <div className='col-12 col-md-offset-3'>
-                    <div className='text-center w-100' id='answers-container'>
-                      {questions[currentQuestion]?.Options.map((option) => {
-                        return (
-                          <Field name='radio' type='radio' value={option.Id}>
-                            {({ input }) => {
-                              return (
-                                <div
-                                  className={
-                                    parseInt(selectedOption as string) ===
-                                    option.Id
-                                      ? 'answer active'
-                                      : 'answer'
-                                  }
-                                  data-content='1000'
-                                >
-                                  <input
-                                    name={input.name}
-                                    type='radio'
-                                    value={option.Id}
-                                    checked={input.checked}
-                                    onChange={(e) => {
-                                      handleChangeAnswer(e);
-                                      input.onChange(e);
-                                    }}
-                                  />
-                                  <label>{option.Text}</label>
-                                </div>
-                              );
-                            }}
-                          </Field>
-                        );
-                      })}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginTop: '20px',
+          }}
+        >
+          <h2>{title}</h2>
+          {result !== null ? (
+            <Result result={result} length={questions.length} />
+          ) : (
+            <form
+              className='mt-5'
+              onSubmit={handleSubmit}
+              style={{ flexGrow: 1 }}
+            >
+              <div className='row'>
+                <div className='col-12 col-md-offset-2'>
+                  <div
+                    className='jumbotron text-center'
+                    id='question-container'
+                  >
+                    <h2 id='question'>{questions[currentQuestion]?.Text}</h2>
+                  </div>
+                  <div className='row'>
+                    <div className='col-12 col-md-offset-3'>
+                      <div className='text-center w-100' id='answers-container'>
+                        {questions[currentQuestion]?.Options.map((option) => {
+                          return (
+                            <Field name='radio' type='radio' value={option.Id}>
+                              {({ input }) => {
+                                return (
+                                  <div
+                                    className={
+                                      parseInt(selectedOption as string) ===
+                                      option.Id
+                                        ? 'answer active'
+                                        : 'answer'
+                                    }
+                                    data-content='1000'
+                                  >
+                                    <input
+                                      name={input.name}
+                                      type='radio'
+                                      value={option.Id}
+                                      checked={input.checked}
+                                      onChange={(e) => {
+                                        handleChangeAnswer(e);
+                                        input.onChange(e);
+                                      }}
+                                    />
+                                    <label>{option.Text}</label>
+                                  </div>
+                                );
+                              }}
+                            </Field>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <hr />
-            <footer>
-              <div className='row'>
-                <div className='col-md-8 col-md-offset-2 d-flex gap-5 justify-content-between w-100'>
-                  <button
-                    onClick={(e) => handleChangeQuestion(e, -1)}
-                    className='btn btn-primary pull-left'
-                    id='previousQ'
-                    disabled={currentQuestion === 0}
-                  >
-                    &nbsp;Previous&nbsp;
-                  </button>
-                  <button
-                    onClick={(e) => handleChangeQuestion(e, 1)}
-                    type='submit'
-                    className='btn btn-primary pull-right'
-                    id='nextQ'
-                    disabled={currentQuestion === questions.length - 1}
-                  >
-                    &nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;&nbsp;
-                  </button>
-                  <button
-                    className='btn btn-primary pull-right'
-                    id='finish'
-                    disabled={answers.length < questions.length - 1}
-                  >
-                    &nbsp;&nbsp;Finish&nbsp;&nbsp;
-                  </button>
+              <hr />
+              <footer>
+                <div className='row'>
+                  <div className='col-md-8 col-md-offset-2 d-flex gap-5 justify-content-between w-100'>
+                    <button
+                      onClick={(e) => handleChangeQuestion(e, -1)}
+                      className='btn btn-primary pull-left'
+                      id='previousQ'
+                      disabled={currentQuestion === 0}
+                    >
+                      &nbsp;Previous&nbsp;
+                    </button>
+                    <button
+                      onClick={(e) => handleChangeQuestion(e, 1)}
+                      type='submit'
+                      className='btn btn-primary pull-right'
+                      id='nextQ'
+                      disabled={currentQuestion === questions.length - 1}
+                    >
+                      &nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
+                    <button
+                      className='btn btn-primary pull-right'
+                      id='finish'
+                      disabled={answers.length < questions.length - 1}
+                    >
+                      &nbsp;&nbsp;Finish&nbsp;&nbsp;
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </footer>
-          </form>
+              </footer>
+            </form>
+          )}
         </div>
       )}
     </Form>

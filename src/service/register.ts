@@ -13,6 +13,8 @@ export const handleRegister = (values: any, dispatch: Dispatch) => {
         email: values.email,
         password: values.password,
       };
+      console.log(res.data);
+      localStorage.setItem('id', res.data.id);
 
       try {
         const res = await nonTokenInstance.post(LOGIN_USER_URL, loginPayload);
@@ -29,6 +31,7 @@ export const handleRegister = (values: any, dispatch: Dispatch) => {
         };
 
         localStorage.setItem('tokens', JSON.stringify(tokens));
+        localStorage.setItem('id', parsedResponse.UserId);
         dispatch(createUser(user));
 
         toast.success('You have successfully registered and logged in');

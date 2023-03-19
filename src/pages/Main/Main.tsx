@@ -24,7 +24,6 @@ export default function Main() {
     try {
       const res = await withTokenInstance.get('quiz');
       dispatch(setQuizzes(res.data));
-      console.log(quizzes);
     } catch (error) {
       console.log(error);
     }
